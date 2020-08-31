@@ -31,6 +31,8 @@ class GenericValue:
 
 
 def command_from_agent_callback(self, command):
+    # her i put the command to publish the data to the CONTROL mqtt channel
+
     print(command)
 
 
@@ -61,7 +63,7 @@ if __name__ == "__main__":
 
         json_payload = json.loads(message.payload)
         timestamp    = json_payload['timestamp']
-        key          = json_payload['sensor']
+        key          = json_payload['device'] + "-" +json_payload['sensor']
         value        = json_payload['value']
 
         losant_client.send_state(key, value)

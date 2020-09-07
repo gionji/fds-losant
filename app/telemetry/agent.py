@@ -3,7 +3,6 @@ import threading
 import losantmqtt as losant
 
 
-
 # this is an abstract clas. Each db implementation has to implement these three methods
 class TelemetryAgent(ABC):
 
@@ -20,21 +19,23 @@ class TelemetryAgent(ABC):
         pass
 
 
-
 class LosantAgent(TelemetryAgent, ABC, threading.Thread):
 
-    def __init__( self, my_device_id, my_app_access_key, my_app_access_secret ):
+    def __init__(self, my_device_id, my_app_access_key, my_app_access_secret):
         super().__init__()
         threading.Thread.__init__(self)
 
-        self.my_device_id         = my_device_id
-        self.my_app_access_key    = my_app_access_key
+        self.my_device_id = my_device_id
+        self.my_app_access_key = my_app_access_key
         self.my_app_access_secret = my_app_access_secret
 
         # Construct Losant device
-        self.device = losant.Device( self.my_device_id,
-                        self.my_app_access_key,
-                        self.my_app_access_secret)
+        print(my_device_id)
+        print(my_app_access_key)
+        print(my_app_access_secret)
+        self.device = losant.Device(self.my_device_id,
+                                    self.my_app_access_key,
+                                    self.my_app_access_secret)
 
         print("Losant Device Set")
 
@@ -47,11 +48,8 @@ class LosantAgent(TelemetryAgent, ABC, threading.Thread):
         self.device.add_event_observer("command", self.on_command)
         self.device.connect(blocking=True)
 
-
-    def send_state(self, name, value):
-        print("Sending Device State")
-        self.device.send_state( { str(name) : value } )
-
+    def send_state(self, value):
+        self.device.send_state(value)
 
     def on_command(self, device, command):
         print(command["name"] + " command received.")
